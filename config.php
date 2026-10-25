@@ -8,18 +8,31 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'qima_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// كشف البيئة تلقائياً: هل نحن على السيرفر السحابي (Hostinger) أم بيئة التطوير المحلية (Localhost / XAMPP)
+$isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1', '::1']) || php_sapi_name() === 'cli';
+
+if ($isLocal) {
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'qima_db');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+} else {
+    // إعدادات استضافة هوستنجر (Hostinger Production)
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'u460026118_u12345678qima');
+    define('DB_USER', 'u460026118_u12345678admin');
+    define('DB_PASS', 'Qima@2026'); // كلمة المرور الافتراضية لقاعدة البيانات
+}
 define('DB_CHARSET', 'utf8mb4');
 
-// تحديد المسار الأساسي بدقة حتى لو تم الاستدعاء من داخل مجلدات فرعية مثل /admin/
-$requestUri = $_SERVER['SCRIPT_NAME'] ?? '';
-if (preg_match('#^(/[^/]+)#', $requestUri, $matches) && $matches[1] !== '/admin') {
-    define('BASE_URL', $matches[1]);
-} else {
+// تحديد المسار الأساسي بدقة (يعمل تلقائياً سواء في مجلد فرعي أو كنطاق رئيسي)
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+if ($isLocal) {
     define('BASE_URL', '/qima-php');
+} else {
+    // في الاستضافة السحابية إذا كان في الـ Root
+    define('BASE_URL', ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '' : rtrim($scriptDir, '/'));
 }
 
 function getDB(): PDO {
