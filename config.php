@@ -85,3 +85,8 @@ function isLoggedIn(): bool {
 function isAdmin(): bool {
     return isset($_SESSION['user']) && in_array($_SESSION['user']['role'], ['admin', 'owner']);
 }
+
+function isOwner(): bool {
+    return isset($_SESSION['user']) && $_SESSION['user']['role'] === 'owner';
+}
+
