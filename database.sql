@@ -1,8 +1,7 @@
 -- قاعدة بيانات منصة قيمة (Qima Platform Database)
--- متوافقة تماماً مع XAMPP / MySQL / MariaDB (UTF-8 Unicode)
+-- متوافقة تماماً مع الاستضافات السحابية (Hostinger / cPanel) و XAMPP
+-- ترميز: UTF-8 Unicode (utf8mb4)
 
-CREATE DATABASE IF NOT EXISTS `qima_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `qima_db`;
 
 -- جدول المستخدمين (users)
 CREATE TABLE IF NOT EXISTS `users` (
