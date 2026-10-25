@@ -111,3 +111,45 @@ INSERT INTO `products` (`handle`, `title`, `category`, `price`, `unit`, `locatio
 ('clean-aluminum-scrap', 'خردة ألمنيوم صناعي مفروز ونظيف', 'metals', 7400.00, 'طن', 'الدمام، الصناعية الأولى', '30 طن', 'قصاصات وألواح ألمنيوم مفروزة خالية من الشوائب والحديد، مثالية لأفران الصهر وإعادة التشكيل.', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80'),
 ('shredded-tires-tdf', 'مطاط إطارات مفروم ومشذب (TDF)', 'tires', 450.00, 'طن', 'القصيم', '80 طن', 'حبيبات ومطاط إطارات مقطع جاهز للاستخدام كوقود بديل في مصانع الأسمنت أو التطبيقات الإنشائية والأرضيات.', 'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?auto=format&fit=crop&w=800&q=80')
 ON DUPLICATE KEY UPDATE `handle`=VALUES(`handle`);
+-- جدول الطلبات والمبيعات (orders)
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_number` VARCHAR(50) NOT NULL UNIQUE,
+  `user_id` INT NULL,
+  `customer_name` VARCHAR(191) NOT NULL,
+  `customer_email` VARCHAR(191) NOT NULL,
+  `customer_phone` VARCHAR(50) NOT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `payment_status` ENUM('unpaid', 'paid', 'refunded') DEFAULT 'unpaid',
+  `order_status` ENUM('new', 'processing', 'completed', 'cancelled') DEFAULT 'new',
+  `notes` TEXT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`user_id`),
+  INDEX (`order_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- جدول عناصر الطلب (order_items)
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_id` INT NOT NULL,
+  `product_id` INT NULL,
+  `product_title` VARCHAR(255) NOT NULL,
+  `quantity` INT NOT NULL DEFAULT 1,
+  `unit_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `total_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- إدخال طلبات تجريبية أولية للإحصائيات
+INSERT INTO `orders` (`id`, `order_number`, `user_id`, `customer_name`, `customer_email`, `customer_phone`, `total_amount`, `payment_status`, `order_status`, `notes`) VALUES
+(1, 'ORD-2026-001', 1, 'ziyad', 'ziyad.aljuhani56@gmail.com', '966500000001', 6400.00, 'paid', 'completed', 'تم استلام وتفريغ شحنة البلاستيك في مصنع الرياض.'),
+(2, 'ORD-2026-002', 6, 'مستخدم تجريبي', 'member@test.com', '966500000006', 1300.00, 'paid', 'processing', 'جاري التنسيق اللوجستي لنقل الكرتون المكبوس.'),
+(3, 'ORD-2026-003', NULL, 'شركة الشرق للألمنيوم', 'procurement@alsharq.sa', '966555123456', 14800.00, 'unpaid', 'new', 'طلب حجز 2 طن خردة ألمنيوم صناعي مفروز.')
+ON DUPLICATE KEY UPDATE `order_number`=VALUES(`order_number`);
+
+INSERT INTO `order_items` (`order_id`, `product_id`, `product_title`, `quantity`, `unit_price`, `total_price`) VALUES
+(1, 1, 'حبيبات بلاستيك معاد تدويره (HDPE)', 2, 3200.00, 6400.00),
+(2, 2, 'كرتون مضلع مفروز ومكبوس (OCC)', 2, 650.00, 1300.00),
+(3, 3, 'خردة ألمنيوم صناعي مفروز ونظيف', 2, 7400.00, 14800.00)
+ON DUPLICATE KEY UPDATE `order_id`=VALUES(`order_id`);

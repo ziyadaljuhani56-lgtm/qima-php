@@ -55,7 +55,7 @@ $user = currentUser();
                 <?php if ($user): ?>
                     <a href="<?= BASE_URL ?>/profile.php" class="header-account">مرحباً، <?= e($user['name']) ?></a>
                     <?php if (in_array($user['role'], ['admin', 'owner'])): ?>
-                        <a href="<?= BASE_URL ?>/dashboard.php" class="button button-outline" style="padding:8px 14px; min-height:38px;">لوحة التحكم</a>
+                        <a href="<?= BASE_URL ?>/admin/" class="button button-outline" style="padding:8px 14px; min-height:38px;">لوحة الإدارة المتكاملة ⚙️</a>
                     <?php endif; ?>
                     <a href="<?= BASE_URL ?>/logout.php" class="text-link" style="color:#b91c1c;">خروج</a>
                 <?php else: ?>
