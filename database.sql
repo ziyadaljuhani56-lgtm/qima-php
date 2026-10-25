@@ -1,4 +1,4 @@
-﻿-- قاعدة بيانات منصة قيمة (Qima Platform Database)
+-- قاعدة بيانات منصة قيمة (Qima Platform Database)
 -- متوافقة تماماً مع XAMPP / MySQL / MariaDB (UTF-8 Unicode)
 
 CREATE DATABASE IF NOT EXISTS `qima_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(191) NOT NULL UNIQUE,
   `phone` VARCHAR(50) NULL,
   `password` VARCHAR(255) NOT NULL,
-  `role` ENUM('user', 'admin', 'owner') DEFAULT 'user',
+  `role` ENUM('member', 'user', 'admin', 'owner') DEFAULT 'member',
   `reset_token` VARCHAR(255) NULL,
   `reset_expires` DATETIME NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -74,11 +74,18 @@ CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- إدخال بيانات تجريبية وحسابات قياسية (كلمة مرور المسؤول: admin123456)
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `role`) VALUES
-(1, 'مدير منصة قيمة', 'admin@qima.sa', '966500000000', '$2y$10$w81oXq5611J16oR1i1cZ4eF3nKxUvFh2n2eR008n93nC9c4kQ98x6', 'owner'),
-(2, 'مستخدم تجريبي', 'user@qima.sa', '966511111111', '$2y$10$w81oXq5611J16oR1i1cZ4eF3nKxUvFh2n2eR008n93nC9c4kQ98x6', 'user')
-ON DUPLICATE KEY UPDATE `email`=VALUES(`email`);
+-- إدخال بيانات المستخدمين والحسابات الإدارية والتجريبية
+INSERT INTO `users` (`name`, `email`, `phone`, `password`, `role`) VALUES
+('ziyad', 'ziyad.aljuhani56@gmail.com', '966500000001', '$2y$10$hznnmddkYh5UdLcwZBWX3eGK03vSwQYsbafSLCX8LotfbxaFqX0EG', 'owner'),
+('مالك المنصة', 'owner@qima.sa', '966500000002', '$2y$10$3610xQYVk9AoLG8rw5AE5.Qx36zKbX0RuAHt7SKqHaFKwZBaom1aK', 'owner'),
+('إداره قيمة', 'admin@qima.sa', '966500000003', '$2y$10$.AriS8Zgi5M3pwY3onz8ueN/3DOPrfkSEN8gfPWN4ACO.klMMUuPu', 'admin'),
+('مالك تجريبي', 'owner@test.com', '966500000004', '$2y$10$hznnmddkYh5UdLcwZBWX3eGK03vSwQYsbafSLCX8LotfbxaFqX0EG', 'owner'),
+('مدير تجريبي', 'admin@test.com', '966500000005', '$2y$10$hznnmddkYh5UdLcwZBWX3eGK03vSwQYsbafSLCX8LotfbxaFqX0EG', 'admin'),
+('مستخدم تجريبي', 'member@test.com', '966500000006', '$2y$10$hznnmddkYh5UdLcwZBWX3eGK03vSwQYsbafSLCX8LotfbxaFqX0EG', 'member')
+ON DUPLICATE KEY UPDATE 
+  `name`=VALUES(`name`),
+  `password`=VALUES(`password`),
+  `role`=VALUES(`role`);
 
 -- بيانات الموارد
 INSERT INTO `materials` (`slug`, `title`, `english`, `description`) VALUES
