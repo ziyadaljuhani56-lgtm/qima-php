@@ -14,13 +14,13 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
-// المسار الأساسي للمشروع (يمكن تعديله حسب مجلدك في htdocs مثلاً /qima-php/)
-$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-$basePath = rtrim($scriptDir, '/');
-if ($basePath === '') {
-    $basePath = '';
+// تحديد المسار الأساسي بدقة حتى لو تم الاستدعاء من داخل مجلدات فرعية مثل /admin/
+$requestUri = $_SERVER['SCRIPT_NAME'] ?? '';
+if (preg_match('#^(/[^/]+)#', $requestUri, $matches) && $matches[1] !== '/admin') {
+    define('BASE_URL', $matches[1]);
+} else {
+    define('BASE_URL', '/qima-php');
 }
-define('BASE_URL', $basePath);
 
 function getDB(): PDO {
     static $pdo = null;
