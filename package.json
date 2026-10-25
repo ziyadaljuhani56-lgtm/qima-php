@@ -1,0 +1,13 @@
+{
+  "name": "qima-php",
+  "version": "1.0.0",
+  "description": "منصة قيمة - الإصدار المتكامل PHP & MySQL ولوحة التحكم الإدارية",
+  "main": "index.php",
+  "scripts": {
+    "start": "php -S 0.0.0.0:8000",
+    "build": "echo 'Build step skipped for PHP project'"
+  },
+  "keywords": ["qima", "php", "ecommerce", "admin-panel"],
+  "author": "ziyad",
+  "license": "ISC"
+}
