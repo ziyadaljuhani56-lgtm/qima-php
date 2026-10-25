@@ -24,6 +24,11 @@ $adminTitle = $adminTitle ?? 'لوحة الإدارة المتكاملة';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($adminTitle) ?> | نظام إدارة قيمة</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/admin/assets/css/admin.css">
+    <?php if (file_exists(__DIR__ . '/../assets/css/admin.css')): ?>
+    <style>
+        <?= file_get_contents(__DIR__ . '/../assets/css/admin.css'); ?>
+    </style>
+    <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -39,8 +44,8 @@ $adminTitle = $adminTitle ?? 'لوحة الإدارة المتكاملة';
                 <path d="m13 5 3 3-3 3"/>
             </svg>
             <div>
-                <strong>قيمة <span>Admin</span></strong>
-                <small>CONTROL CENTER</small>
+                <strong>قيمة <span style="font-size:16px; font-weight:400; color:var(--admin-primary);">| لوحة الإدارة</span></strong>
+                <small>منصة الاقتصاد الدائري وإدارة الموارد</small>
             </div>
         </div>
 
@@ -67,17 +72,10 @@ $adminTitle = $adminTitle ?? 'لوحة الإدارة المتكاملة';
                 <?php endif; ?>
             </a>
 
-            <div class="nav-section-title">المستخدمون والنظام</div>
+            <div class="nav-section-title">المستخدمون والشركاء</div>
             <a href="<?= BASE_URL ?>/admin/customers.php" class="sidebar-link <?= $currentAdminPage === 'customers' ? 'active' : '' ?>">
                 <span>👥 العملاء والمستخدمين</span>
             </a>
-
-            <?php if ($user['role'] === 'owner'): ?>
-                <div class="nav-section-title">إدارة قواعد البيانات (للمالك)</div>
-                <a href="<?= BASE_URL ?>/admin/db-manager.php" class="sidebar-link <?= $currentAdminPage === 'db-manager' ? 'active' : '' ?>">
-                    <span>🗄️ مدير قاعدة البيانات (SQL Studio)</span>
-                </a>
-            <?php endif; ?>
         </nav>
 
         <div class="sidebar-footer">
@@ -108,7 +106,7 @@ $adminTitle = $adminTitle ?? 'لوحة الإدارة المتكاملة';
             </div>
             <div class="topbar-actions">
                 <span class="status-pill <?= e($user['role']) ?>">
-                    ● صلاحية: <?= e($user['role']) ?>
+                    ● الصلاحية: <?= e($user['role'] === 'owner' ? 'المالك' : 'مدير النظام') ?>
                 </span>
                 <a href="<?= BASE_URL ?>/" target="_blank" class="btn btn-outline btn-sm">
                     المتجر المباشر &larr;

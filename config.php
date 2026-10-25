@@ -26,13 +26,17 @@ if ($isLocal) {
 define('DB_CHARSET', 'utf8mb4');
 
 // تحديد المسار الأساسي بدقة (يعمل تلقائياً سواء في مجلد فرعي أو كنطاق رئيسي)
-$host = $_SERVER['HTTP_HOST'] ?? '';
-$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 if ($isLocal) {
     define('BASE_URL', '/qima-php');
 } else {
-    // في الاستضافة السحابية إذا كان في الـ Root
-    define('BASE_URL', ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '' : rtrim($scriptDir, '/'));
+    // في هوستنجر أو الاستضافات السحابية (نطاق رئيسي)
+    // إذا كان المجلد المستدعى يحتوي على /qima-php نحتفظ به، وإلا يكون الـ Root فارغاً
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (strpos($scriptName, '/qima-php') === 0) {
+        define('BASE_URL', '/qima-php');
+    } else {
+        define('BASE_URL', '');
+    }
 }
 
 function getDB(): PDO {
