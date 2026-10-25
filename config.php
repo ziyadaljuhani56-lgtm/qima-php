@@ -21,7 +21,7 @@ if ($isLocal) {
     define('DB_HOST', 'localhost');
     define('DB_NAME', 'u460026118_u12345678qima');
     define('DB_USER', 'u460026118_u12345678admin');
-    define('DB_PASS', 'Ziyad-_iqima');
+    define('DB_PASS', 'Ziyad-_-518iqima');
 }
 define('DB_CHARSET', 'utf8mb4');
 
